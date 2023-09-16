@@ -5,6 +5,8 @@ import {getDeck, drawACard} from '../../api/apiService';
 import {cardValueToInt} from '../../utils/helperFunctions';
 import {Card, CustomButton, GameRules} from '../../components';
 
+import {gameRules, errorText} from '../Constants/textData';
+
 const Game = () => {
   const [deckId, setDeckId] = useState<string | null>(null);
   const [currentCard, setCurrentCard] = useState<any>(null);
@@ -12,21 +14,22 @@ const Game = () => {
   const [score, setScore] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
 
-  const errorText = 'Network error. Please try again.';
-  const gameRules =
-    'Is the upcoming card higher or lower than the current one? Test your your luck!';
+  // Effect to initialize the deck and fetch the first card on component mount.
 
   useEffect(() => {
     const initializeDeck = async () => {
       try {
+        // Fetch a new deck from the API
         const deck = await getDeck();
         setDeckId(deck.deck_id);
         setRemainingCards(deck.remaining);
 
+        // Fetch a card from the new deck
         const cardData = await drawACard(deck.deck_id);
         setCurrentCard(cardData.cards[0]);
         setRemainingCards(cardData.remaining);
       } catch (err) {
+        // If there's an error, set the error state.
         setError(errorText);
       }
     };
@@ -40,23 +43,27 @@ const Game = () => {
       }
 
       try {
+        // Fetch a new card for comparison
         const cardData = await drawACard(deckId);
         const nextCard = cardData.cards[0];
         const currentCardValue = cardValueToInt(currentCard.value);
         const nextCardValue = cardValueToInt(nextCard.value);
 
+        // Check if the user's guess is correct.
         const isHigherGuess =
           guess === 'higher' && nextCardValue > currentCardValue;
         const isLowerGuess =
           guess === 'lower' && nextCardValue < currentCardValue;
 
+        // Increase the score if the guess is correct.
         if (isHigherGuess || isLowerGuess) {
           setScore(prevScore => prevScore + 1);
         }
-
+        // Update the current card and the remaining cards count.
         setCurrentCard(nextCard);
         setRemainingCards(cardData.remaining);
       } catch (err) {
+        // If there's an error, set the error state.
         setError(errorText);
       }
     },

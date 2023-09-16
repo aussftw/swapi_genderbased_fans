@@ -12,8 +12,10 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   onPress,
   remainingCards,
 }) => {
+  // memoize the disabled state
   const isDisabled = useMemo(() => remainingCards === 0, [remainingCards]);
 
+  // memoize the button style
   const buttonStyle = useMemo<ViewStyle>(
     () => ({
       padding: 15,

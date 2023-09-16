@@ -1,7 +1,7 @@
 export const cardValueToInt = (value: string): number => {
   switch (value) {
     case 'ACE':
-      return 1;
+      return 14;
     case 'JACK':
       return 11;
     case 'QUEEN':
