@@ -1,14 +1,20 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 
 interface CardProps {
   imageUrl: string;
 }
 
+type ImageSource = {
+  uri: string;
+};
+
 const Card: React.FC<CardProps> = ({imageUrl}) => {
+  const imageSource: ImageSource = useMemo(() => ({uri: imageUrl}), [imageUrl]);
+
   return (
     <View style={styles.cardContainer}>
-      <Image source={{uri: imageUrl}} style={styles.cardImage} />
+      <Image source={imageSource} style={styles.cardImage} />
     </View>
   );
 };

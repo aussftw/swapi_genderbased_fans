@@ -1,16 +1,16 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 
-import {getDeck, drawACard} from '../../api/apiService';
+import {getDeck, drawACard, Card} from '../../api/apiService';
 import {cardValueToInt} from '../../utils/helperFunctions';
-import {Card, CustomButton, GameRules} from '../../components';
+import {Card as CardComponent, CustomButton, GameRules} from '../../components';
 
 import {gameRules, errorText} from '../../Constants/textData';
 
 const GameBoard = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [deckId, setDeckId] = useState<string | null>(null);
-  const [currentCard, setCurrentCard] = useState<any>(null);
+  const [currentCard, setCurrentCard] = useState<Card | null>(null);
   const [remainingCards, setRemainingCards] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
@@ -20,20 +20,26 @@ const GameBoard = () => {
   useEffect(() => {
     const initializeDeck = async () => {
       try {
-        // Fetch a new deck from the API
-        setLoading(true); // start loading
+        setLoading(true);
         const deck = await getDeck();
+
+        if (!deck) {
+          throw new Error();
+        }
         setDeckId(deck.deck_id);
         setRemainingCards(deck.remaining);
-        setLoading(false); // end loading after data is fetched
-        // Fetch a card from the new deck
+
         const cardData = await drawACard(deck.deck_id);
+        if (!cardData || !cardData.cards || cardData.cards.length === 0) {
+          throw new Error();
+        }
+
         setCurrentCard(cardData.cards[0]);
         setRemainingCards(cardData.remaining);
-      } catch (err) {
-        // If there's an error, set the error state.
+      } catch {
         setError(errorText);
-        setLoading(false); // end loading after data is fetched
+      } finally {
+        setLoading(false);
       }
     };
     initializeDeck();
@@ -48,7 +54,11 @@ const GameBoard = () => {
       try {
         // Fetch a new card for comparison
         const cardData = await drawACard(deckId);
+        if (!cardData || !cardData.cards || cardData.cards.length === 0) {
+          throw new Error('Failed to draw a card.');
+        }
         const nextCard = cardData.cards[0];
+
         const currentCardValue = cardValueToInt(currentCard.value);
         const nextCardValue = cardValueToInt(nextCard.value);
 
@@ -76,20 +86,30 @@ const GameBoard = () => {
   const resetGame = useCallback(async () => {
     try {
       const deck = await getDeck();
+      if (!deck) {
+        throw new Error('Failed to fetch deck.');
+      }
       setDeckId(deck.deck_id);
       setRemainingCards(deck.remaining);
       const cardData = await drawACard(deck.deck_id);
+      if (!cardData || !cardData.cards || cardData.cards.length === 0) {
+        throw new Error('Failed to draw a card.');
+      }
       setCurrentCard(cardData.cards[0]);
       setRemainingCards(cardData.remaining);
       setScore(0);
     } catch (err) {
-      setError('Failed to reset the game. Please try again.');
+      setError(errorText);
     }
   }, []);
 
-  const makeAGuess = (guess: 'higher' | 'lower') => {
-    handleGuess(guess);
-  };
+  const handleHigherGuess = useCallback(() => {
+    handleGuess('higher');
+  }, [handleGuess]);
+
+  const handleLowerGuess = useCallback(() => {
+    handleGuess('lower');
+  }, [handleGuess]);
 
   return (
     <View style={styles.container}>
@@ -104,19 +124,19 @@ const GameBoard = () => {
           {currentCard && (
             <>
               <Text style={styles.infoText}>Score: {score}</Text>
-              <Card imageUrl={currentCard.image} />
+              <CardComponent imageUrl={currentCard.image} />
               <Text style={styles.infoText}>
                 Cards Remaining: {remainingCards}
               </Text>
               <View style={styles.buttonsBar}>
                 <CustomButton
                   title="Higher"
-                  onPress={() => makeAGuess('higher')}
+                  onPress={handleHigherGuess}
                   remainingCards={remainingCards}
                 />
                 <CustomButton
                   title="Lower"
-                  onPress={() => makeAGuess('lower')}
+                  onPress={handleLowerGuess}
                   remainingCards={remainingCards}
                 />
               </View>
