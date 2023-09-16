@@ -2,7 +2,7 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 # Getting Started
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+> **Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
 ## Step 1: Start the Metro Server
 
@@ -17,6 +17,18 @@ npm start
 # OR using Yarn
 yarn start
 ```
+
+# Game Rules
+
+Welcome to the Guessing Game!
+
+The goal of the game is to predict whether the next card will be higher or lower than the current one. Here are the rules:
+
+- A new deck of cards is presented with one card facing up.
+- Your task is to guess whether the next card from the deck will be higher or lower.
+- For each correct guess, you'll earn a point.
+- The game continues until there are no more cards in the deck or you decide to reset the game.
+- Test your luck and see how high you can score!
 
 ## Step 2: Start your Application
 

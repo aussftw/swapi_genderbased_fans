@@ -1,13 +1,14 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 
 import {getDeck, drawACard} from '../../api/apiService';
 import {cardValueToInt} from '../../utils/helperFunctions';
 import {Card, CustomButton, GameRules} from '../../components';
 
-import {gameRules, errorText} from '../Constants/textData';
+import {gameRules, errorText} from '../../Constants/textData';
 
-const Game = () => {
+const GameBoard = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [deckId, setDeckId] = useState<string | null>(null);
   const [currentCard, setCurrentCard] = useState<any>(null);
   const [remainingCards, setRemainingCards] = useState<number>(0);
@@ -20,10 +21,11 @@ const Game = () => {
     const initializeDeck = async () => {
       try {
         // Fetch a new deck from the API
+        setLoading(true); // start loading
         const deck = await getDeck();
         setDeckId(deck.deck_id);
         setRemainingCards(deck.remaining);
-
+        setLoading(false); // end loading after data is fetched
         // Fetch a card from the new deck
         const cardData = await drawACard(deck.deck_id);
         setCurrentCard(cardData.cards[0]);
@@ -31,6 +33,7 @@ const Game = () => {
       } catch (err) {
         // If there's an error, set the error state.
         setError(errorText);
+        setLoading(false); // end loading after data is fetched
       }
     };
     initializeDeck();
@@ -90,14 +93,14 @@ const Game = () => {
 
   return (
     <View style={styles.container}>
-      {error ? (
+      {loading ? (
+        <ActivityIndicator size="large" color="#ddd" />
+      ) : error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : (
         <>
           <Text style={styles.title}>Guessing Game</Text>
-
           <GameRules text={gameRules} />
-
           {currentCard && (
             <>
               <Text style={styles.infoText}>Score: {score}</Text>
@@ -158,4 +161,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Game;
+export default GameBoard;
