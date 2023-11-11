@@ -1,8 +1,14 @@
-import React from 'react';
-import {FlatList, View, Text, Button, ActivityIndicator} from 'react-native';
+import React, {useCallback} from 'react';
+import {
+  FlatList,
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 
 import {Hero} from '../../types';
-import {Card} from '../Card/Card';
+import {Card, NavButton} from '../';
 
 type PaginatedListViewProps = {
   data: Hero[];
@@ -25,13 +31,14 @@ export const PaginatedListView = ({
   totalPages,
   handleFans,
 }: PaginatedListViewProps) => {
-  const goToNextPage = () => setPage(old => old + 1);
-  const goToPreviousPage = () => setPage(old => Math.max(old - 1, 1));
-
-  console.log(totalPages, data);
+  const goToNextPage = useCallback(() => setPage(old => old + 1), [setPage]);
+  const goToPreviousPage = useCallback(
+    () => setPage(old => Math.max(old - 1, 1)),
+    [setPage],
+  );
 
   if (isLoading) {
-    return <ActivityIndicator size="large" color="#00ff00" />;
+    return <ActivityIndicator size="large" color="brown" />;
   }
 
   if (isError) {
@@ -45,19 +52,15 @@ export const PaginatedListView = ({
         keyExtractor={item => item.url}
         renderItem={({item}) => <Card hero={item} handleFans={handleFans} />}
       />
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          margin: 10,
-        }}>
-        <Button
-          title="Previous"
+      <View style={styles.controlsContainer}>
+        <NavButton
+          text="Previous"
           onPress={goToPreviousPage}
           disabled={isLoading || isFetching || currentPage <= 1}
         />
-        <Button
-          title="Next"
+        <ActivityIndicator size="large" color="brown" animating={isFetching} />
+        <NavButton
+          text="Next"
           onPress={goToNextPage}
           disabled={isLoading || isFetching || currentPage >= totalPages}
         />
@@ -65,3 +68,12 @@ export const PaginatedListView = ({
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  controlsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 15,
+    marginTop: 15,
+  },
+});

@@ -1,19 +1,19 @@
 import React, {useCallback} from 'react';
 import {StyleSheet, View, Text, TouchableHighlight} from 'react-native';
 
-import {Hero, ScreenNames} from '../../types';
 import {useTypedNavigation} from '../../hooks/typeNavitgation';
+import {Hero, ScreenNames} from '../../types';
 
 type CardProps = {
   hero: Hero;
   handleFans: (hero: Hero) => void;
 };
 
-export const Card: React.FC<CardProps> = ({hero}) => {
+export const Card: React.FC<CardProps> = ({hero, handleFans}) => {
   const navigation = useTypedNavigation();
   const goToDetails = useCallback(() => {
-    navigation.navigate(ScreenNames.HeroDetails, {hero});
-  }, [hero, navigation]);
+    navigation.navigate(ScreenNames.HeroDetails, {hero, handleFans});
+  }, [hero, navigation, handleFans]);
   const {name} = hero;
 
   return (
@@ -23,7 +23,7 @@ export const Card: React.FC<CardProps> = ({hero}) => {
       style={styles.cardContainer}>
       <View style={styles.cardContent}>
         <Text style={styles.cardText}>{name.toUpperCase()}</Text>
-        {/* <Text style={styles.arrowIcon}>→</Text>  */}
+        <Text style={styles.arrowIcon}>→</Text>
       </View>
     </TouchableHighlight>
   );

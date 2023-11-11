@@ -1,10 +1,10 @@
 import React, {useState, useCallback} from 'react';
 import {useQuery} from 'react-query';
+import {View} from 'react-native';
 
-import {Hero, FetchHeroesResponse} from '../../types/';
-import {Text, View} from 'react-native';
-import {CountersView} from '../../components/CountersView/CountersView';
 import {PaginatedListView} from '../../components/PaginatedListView/PaginatedListView';
+import {CountersView} from '../../components/CountersView/CountersView';
+import {Hero, FetchHeroesResponse} from '../../types/';
 import {fetchHeroes} from '../../api/apiService';
 
 type Fans = {
@@ -19,8 +19,9 @@ const initialFansState: Fans = {
 };
 
 export const HeroesList = (): JSX.Element => {
-  const [currentPage, setcurrentPage] = React.useState(1);
+  const [currentPage, setcurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [countedHeroes, setCountedHeroes] = useState(new Set());
 
   const {isLoading, isError, data, isFetching} = useQuery<
     FetchHeroesResponse,
@@ -40,28 +41,36 @@ export const HeroesList = (): JSX.Element => {
 
   const handleFans = useCallback(
     (hero: Hero) => {
+      if (countedHeroes.has(hero.name)) {
+        return;
+      }
+
+      setCountedHeroes(prevCountedHeroes =>
+        new Set(prevCountedHeroes).add(hero.name),
+      );
+
       if (hero.gender === 'male') {
-        setFans({...fans, maleFan: fans.maleFan + 1});
+        setFans(prevFans => ({...prevFans, maleFan: prevFans.maleFan + 1}));
       } else if (hero.gender === 'female') {
-        setFans({...fans, femaleFan: fans.femaleFan + 1});
+        setFans(prevFans => ({...prevFans, femaleFan: prevFans.femaleFan + 1}));
       } else {
-        setFans({...fans, otherFan: fans.otherFan + 1});
+        setFans(prevFans => ({...prevFans, otherFan: prevFans.otherFan + 1}));
       }
     },
-    [fans],
+    [countedHeroes],
   );
 
   const resetFans = useCallback(() => {
     setFans(initialFansState);
+    setCountedHeroes(new Set());
   }, []);
 
   return (
     <View>
-      <Text style={{color: 'red'}}>Heroes List</Text>
       <CountersView
-        femaleFan={0}
-        maleFan={0}
-        otherFan={0}
+        femaleFan={fans.femaleFan}
+        maleFan={fans.maleFan}
+        otherFan={fans.otherFan}
         clearFans={resetFans}
       />
       <PaginatedListView

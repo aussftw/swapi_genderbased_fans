@@ -1,8 +1,30 @@
 # Overview
 
-Welcome to the Guessing Game!
-
 This React Native project is designed to fetch and display a list of characters from a server, allowing users to view detailed information about each character and manage their favorites. The application provides features like adding characters to favorites, displaying statistical data based on gender, and a reset functionality to clear the favorites list.
+
+# F.A.Q.
+
+## 1. Why not use any state management tool like Redux Toolkit?
+
+For this application, we've assessed that its scale and complexity do not warrant the introduction of a state management library like Redux Toolkit. Our decision is grounded in the following considerations:
+
+- Simplicity and Overhead: The application is relatively small. Introducing a state management library would add unnecessary complexity and overhead. We aim to keep the codebase as simple and maintainable as possible, especially when the existing React state management (using useState API) suffices for our needs.
+
+- Performance Considerations: State management libraries are powerful, but they come with a performance cost. For small applications, this cost can outweigh the benefits. Our current setup is optimized for the application's size and offers adequate performance without the additional layer of a state management tool.
+
+- Ease of Understanding and Maintenance: By avoiding external state management libraries, new developers or contributors can understand and start working on the project more quickly. This aligns with our goal to keep the project accessible and easy to maintain.
+
+## 2. Why not use any library for icons orr add webp?
+
+We have chosen not to use an external library for icons for the following reasons:
+
+- imited Icon Usage: Our application only requires a handful of icons (currently three). In such a scenario, introducing an entire library just for a few icons can be seen as overkill.
+
+- Performance and Size Considerations: Adding an icon library, even a lightweight one, increases the application's size and can have an impact on performance. By using simple text symbols, we keep our application more lightweight and faster to load.
+
+- Simplicity and Direct Control: Using text symbols gives us direct control over the icons without relying on external dependencies. This approach allows for simpler updates and maintenance, as we're not bound by the constraints or updates of a third-party library.
+
+- Customizability and Consistency: With text symbols, we can easily customize the appearance to match the application's design without worrying about the availability or style consistency that might come with an icon library.
 
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
