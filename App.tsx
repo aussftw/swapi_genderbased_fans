@@ -1,13 +1,18 @@
 import React from 'react';
+import {QueryClient, QueryClientProvider} from 'react-query';
 import {SafeAreaView, StyleSheet} from 'react-native';
 
-import GameBoardView from './src/screens/GameBoardView/GameBoardView';
+import {MainNavigator} from './src/navigation';
+
+const queryClient = new QueryClient();
 
 function App(): JSX.Element {
   return (
-    <SafeAreaView style={styles.container}>
-      <GameBoardView />
-    </SafeAreaView>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaView style={styles.container}>
+        <MainNavigator />
+      </SafeAreaView>
+    </QueryClientProvider>
   );
 }
 

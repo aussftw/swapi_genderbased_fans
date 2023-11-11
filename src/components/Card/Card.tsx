@@ -1,41 +1,57 @@
-import React, {useMemo} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import React, {useCallback} from 'react';
+import {StyleSheet, View, Text, TouchableHighlight} from 'react-native';
 
-interface CardProps {
-  imageUrl: string;
-}
+import {Hero, ScreenNames} from '../../types';
+import {useTypedNavigation} from '../../hooks/typeNavitgation';
 
-type ImageSource = {
-  uri: string;
+type CardProps = {
+  hero: Hero;
+  handleFans: (hero: Hero) => void;
 };
 
-const Card: React.FC<CardProps> = ({imageUrl}) => {
-  const imageSource: ImageSource = useMemo(() => ({uri: imageUrl}), [imageUrl]);
+export const Card: React.FC<CardProps> = ({hero}) => {
+  const navigation = useTypedNavigation();
+  const goToDetails = useCallback(() => {
+    navigation.navigate(ScreenNames.HeroDetails, {hero});
+  }, [hero, navigation]);
+  const {name} = hero;
 
   return (
-    <View style={styles.cardContainer}>
-      <Image source={imageSource} style={styles.cardImage} />
-    </View>
+    <TouchableHighlight
+      underlayColor="#DDDDDD"
+      onPress={goToDetails}
+      style={styles.cardContainer}>
+      <View style={styles.cardContent}>
+        <Text style={styles.cardText}>{name.toUpperCase()}</Text>
+        {/* <Text style={styles.arrowIcon}>→</Text>  */}
+      </View>
+    </TouchableHighlight>
   );
 };
 
 const styles = StyleSheet.create({
   cardContainer: {
     justifyContent: 'center',
-    alignItems: 'center',
-    margin: 10,
+    margin: 5,
     backgroundColor: 'white',
     borderRadius: 10,
-    elevation: 5,
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    borderWidth: 1,
+    borderColor: 'brown',
   },
-  cardImage: {
-    width: 100,
-    height: 139,
-    resizeMode: 'contain',
+  cardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+  },
+  cardText: {
+    color: 'silver',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  arrowIcon: {
+    color: 'black',
+    fontSize: 18,
   },
 });
-
-export default Card;

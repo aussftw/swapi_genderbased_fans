@@ -1,5 +1,6 @@
-import GameRules from './GameRules/GameRules';
-import CustomButton from './CustomButton/CustomButton';
-import Card from './Card/Card';
+import {Counter} from './Counter/Counter';
+import {Card} from './Card/Card';
+import {CountersView} from './CountersView/CountersView';
+import {PaginatedListView} from './PaginatedListView/PaginatedListView';
 
-export {GameRules, CustomButton, Card};
+export {Counter, Card, PaginatedListView, CountersView};

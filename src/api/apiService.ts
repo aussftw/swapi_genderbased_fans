@@ -1,44 +1,14 @@
-export type DeckResponse = {
-  success: boolean;
-  deck_id: string;
-  shuffled: boolean;
-  remaining: number;
-  cards?: Card[];
-};
+import {FetchHeroesResponse} from '../types';
 
-export type Card = {
-  image: string;
-  value: string;
-  suit: string;
-  code: string;
-};
+const ITEMS_PER_PAGE: number = 10;
 
-import axios from 'axios';
+export const fetchHeroes = async (page = 0): Promise<FetchHeroesResponse> => {
+  const response = await fetch(`https://swapi.dev/api/people/?page=${page}`);
+  const data = await response.json();
+  const totalPages = Math.ceil(data.count / ITEMS_PER_PAGE);
 
-const BASE_URL = 'https://deckofcardsapi.com/api/deck';
-
-export const getDeck = async (): Promise<DeckResponse | null> => {
-  try {
-    const response = await axios.get<DeckResponse>(
-      `${BASE_URL}/new/shuffle/?deck_count=1`,
-    );
-    return response.data;
-  } catch (error) {
-    console.error('Error getting deck:', error);
-    return null;
-  }
-};
-
-export const drawACard = async (
-  deckId: string,
-): Promise<DeckResponse | null> => {
-  try {
-    const response = await axios.get<DeckResponse>(
-      `${BASE_URL}/${deckId}/draw/?count=1`,
-    );
-    return response.data;
-  } catch (error) {
-    console.error('Error drawing a card:', error);
-    return null;
-  }
+  return {
+    data: data.results,
+    totalPages,
+  };
 };

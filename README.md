@@ -1,14 +1,8 @@
-# Game Rules
+# Overview
 
 Welcome to the Guessing Game!
 
-The goal of the game is to predict whether the next card will be higher or lower than the current one. Here are the rules:
-
-- A new deck of cards is presented with one card facing up.
-- Your task is to guess whether the next card from the deck will be higher or lower.
-- For each correct guess, you'll earn a point.
-- The game continues until there are no more cards in the deck or you decide to reset the game.
-- Test your luck and see how high you can score!
+This React Native project is designed to fetch and display a list of characters from a server, allowing users to view detailed information about each character and manage their favorites. The application provides features like adding characters to favorites, displaying statistical data based on gender, and a reset functionality to clear the favorites list.
 
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
@@ -29,18 +23,6 @@ npm start
 # OR using Yarn
 yarn start
 ```
-
-# Game Rules
-
-Welcome to the Guessing Game!
-
-The goal of the game is to predict whether the next card will be higher or lower than the current one. Here are the rules:
-
-- A new deck of cards is presented with one card facing up.
-- Your task is to guess whether the next card from the deck will be higher or lower.
-- For each correct guess, you'll earn a point.
-- The game continues until there are no more cards in the deck or you decide to reset the game.
-- Test your luck and see how high you can score!
 
 ## Step 2: Start your Application
 
