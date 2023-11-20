@@ -1,11 +1,5 @@
-import React, {useState, useMemo} from 'react';
-import {
-  ScrollView,
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import React from 'react';
+import {ScrollView, Text, StyleSheet} from 'react-native';
 
 import {HeroDetailsScreenRouteProp} from '../../navigation';
 
@@ -14,22 +8,7 @@ type HeroDetailsProps = {
 };
 
 export const HeroDetails = ({route}: HeroDetailsProps) => {
-  const {hero, handleFans} = route.params;
-  const [isAddedToFavorites, setIsAddedToFavorites] = useState(false);
-
-  const buttonContainerContent = useMemo(() => {
-    const handlePress = () => {
-      handleFans(hero);
-      setIsAddedToFavorites(true);
-    };
-    return isAddedToFavorites ? (
-      <Text style={styles.addedToFavoritesText}>Added to your favorites</Text>
-    ) : (
-      <TouchableOpacity style={styles.button} onPress={handlePress}>
-        <Text style={styles.buttonText}>I am your fan ♥</Text>
-      </TouchableOpacity>
-    );
-  }, [isAddedToFavorites, handleFans, hero]);
+  const {hero} = route.params;
 
   return (
     <ScrollView style={styles.container}>
@@ -44,7 +23,6 @@ export const HeroDetails = ({route}: HeroDetailsProps) => {
       <Text style={styles.text}>Birth Year: {hero.birth_year}</Text>
       <Text style={styles.text}>Gender: {hero.gender}</Text>
       <Text style={styles.text}>Created: {hero.created}</Text>
-      <View style={styles.buttonContainer}>{buttonContainerContent}</View>
     </ScrollView>
   );
 };
@@ -65,17 +43,5 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 20,
     alignItems: 'center',
-  },
-  button: {
-    backgroundColor: 'brown',
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-  addedToFavoritesText: {
-    textAlign: 'center',
   },
 });

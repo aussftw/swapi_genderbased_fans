@@ -42,19 +42,37 @@ export const HeroesList = (): JSX.Element => {
   const handleFans = useCallback(
     (hero: Hero) => {
       if (countedHeroes.has(hero.name)) {
-        return;
-      }
+        setCountedHeroes(prevCountedHeroes => {
+          const newCountedHeroes = new Set(prevCountedHeroes);
+          newCountedHeroes.delete(hero.name);
+          return newCountedHeroes;
+        });
 
-      setCountedHeroes(prevCountedHeroes =>
-        new Set(prevCountedHeroes).add(hero.name),
-      );
-
-      if (hero.gender === 'male') {
-        setFans(prevFans => ({...prevFans, maleFan: prevFans.maleFan + 1}));
-      } else if (hero.gender === 'female') {
-        setFans(prevFans => ({...prevFans, femaleFan: prevFans.femaleFan + 1}));
+        if (hero.gender === 'male') {
+          setFans(prevFans => ({...prevFans, maleFan: prevFans.maleFan - 1}));
+        } else if (hero.gender === 'female') {
+          setFans(prevFans => ({
+            ...prevFans,
+            femaleFan: prevFans.femaleFan - 1,
+          }));
+        } else {
+          setFans(prevFans => ({...prevFans, otherFan: prevFans.otherFan - 1}));
+        }
       } else {
-        setFans(prevFans => ({...prevFans, otherFan: prevFans.otherFan + 1}));
+        setCountedHeroes(prevCountedHeroes =>
+          new Set(prevCountedHeroes).add(hero.name),
+        );
+
+        if (hero.gender === 'male') {
+          setFans(prevFans => ({...prevFans, maleFan: prevFans.maleFan + 1}));
+        } else if (hero.gender === 'female') {
+          setFans(prevFans => ({
+            ...prevFans,
+            femaleFan: prevFans.femaleFan + 1,
+          }));
+        } else {
+          setFans(prevFans => ({...prevFans, otherFan: prevFans.otherFan + 1}));
+        }
       }
     },
     [countedHeroes],

@@ -1,5 +1,11 @@
-import React, {useCallback} from 'react';
-import {StyleSheet, View, Text, TouchableHighlight} from 'react-native';
+import React, {useState, useCallback, useMemo} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+} from 'react-native';
 
 import {useTypedNavigation} from '../../hooks/typeNavitgation';
 import {Hero, ScreenNames} from '../../types';
@@ -10,11 +16,39 @@ type CardProps = {
 };
 
 export const Card: React.FC<CardProps> = ({hero, handleFans}) => {
+  const [isAddedToFavorites, setIsAddedToFavorites] = useState(false);
   const navigation = useTypedNavigation();
   const goToDetails = useCallback(() => {
-    navigation.navigate(ScreenNames.HeroDetails, {hero, handleFans});
-  }, [hero, navigation, handleFans]);
+    navigation.navigate(ScreenNames.HeroDetails, {hero});
+  }, [hero, navigation]);
   const {name} = hero;
+
+  const buttonContainerContent = useMemo(() => {
+    const addToFavourites = () => {
+      handleFans(hero);
+      setIsAddedToFavorites(true);
+    };
+
+    const removeFromFavourites = () => {
+      setIsAddedToFavorites(false);
+      handleFans(hero);
+    };
+    return isAddedToFavorites ? (
+      <TouchableOpacity
+        style={styles.button}
+        onPress={removeFromFavourites}
+        activeOpacity={0.8}>
+        <Text style={styles.buttonText}>Remove from favourites</Text>
+      </TouchableOpacity>
+    ) : (
+      <TouchableOpacity
+        style={styles.button}
+        onPress={addToFavourites}
+        activeOpacity={0.8}>
+        <Text style={styles.buttonText}>Add to favourites</Text>
+      </TouchableOpacity>
+    );
+  }, [isAddedToFavorites, handleFans, hero]);
 
   return (
     <TouchableHighlight
@@ -23,6 +57,7 @@ export const Card: React.FC<CardProps> = ({hero, handleFans}) => {
       style={styles.cardContainer}>
       <View style={styles.cardContent}>
         <Text style={styles.cardText}>{name.toUpperCase()}</Text>
+        {buttonContainerContent}
         <Text style={styles.arrowIcon}>→</Text>
       </View>
     </TouchableHighlight>
@@ -47,11 +82,23 @@ const styles = StyleSheet.create({
   },
   cardText: {
     color: 'silver',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   arrowIcon: {
     color: 'black',
     fontSize: 18,
+  },
+  button: {
+    backgroundColor: 'brown',
+    padding: 5,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 12,
+  },
+  addedToFavoritesText: {
+    textAlign: 'center',
   },
 });

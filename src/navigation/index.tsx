@@ -1,7 +1,6 @@
 import React from 'react';
 import {RouteProp} from '@react-navigation/native';
 import {NavigationContainer} from '@react-navigation/native';
-
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -12,7 +11,7 @@ import {HeroDetails, HeroesList} from '../screens/';
 
 export type RootStackParamList = {
   [ScreenNames.HeroesList]: undefined;
-  [ScreenNames.HeroDetails]: {hero: Hero; handleFans: (hero: Hero) => void};
+  [ScreenNames.HeroDetails]: {hero: Hero};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
